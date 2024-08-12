@@ -44,11 +44,22 @@ public class DemoPhoton : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(inputRoomName.text, roomOptions);
     }
 
+    public void JoinRoom()
+    {
+        PhotonNetwork.JoinRoom(inputRoomName.text);
+    }
+
+    public override void OnJoinedRoom()
+    {
+        base.OnJoinedRoom();
+        PhotonNetwork.LoadLevel("PlayScene");
+    }
+
     public override void OnCreatedRoom()
     {
         base.OnCreatedRoom();
         textState.text = "Create room succesfuly";
-        PhotonNetwork.LoadLevel("PlayScene");
+        //PhotonNetwork.LoadLevel("PlayScene");
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)

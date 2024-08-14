@@ -1,6 +1,4 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -15,6 +13,10 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private Vector3 velocity;
     private bool isGrounded;
+
+    public GameObject bullet;
+    public Transform bulletSpawnPos;
+    public float bulletSpeed;
 
     private void Awake()
     {
@@ -32,8 +34,24 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(photonView.IsMine)
+        if (photonView.IsMine)
+        {
             HandleMovement();
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                photonView.RPC("HandleShoot", RpcTarget.All);
+            }
+            //HandleShoot();
+        }
+
+    }
+
+    [PunRPC]
+    private void HandleShoot()
+    {
+        GameObject bulletObject = GameObject.Instantiate(bullet, bulletSpawnPos.position, Quaternion.identity);
+        bulletObject.GetComponent<Rigidbody>().velocity = Vector3.forward * bulletSpeed;
+
     }
 
     private void HandleMovement()

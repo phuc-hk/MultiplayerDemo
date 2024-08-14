@@ -49,6 +49,11 @@ public class DemoPhoton : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRoom(inputRoomName.text);
     }
 
+    public void JoinRoomByName(string roomName)
+    {
+        PhotonNetwork.JoinRoom(roomName);
+    }
+
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();

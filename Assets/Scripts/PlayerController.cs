@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     private PhotonView photonView;
     public GameObject mark;
+    public GameObject cameraMain;
 
     public float moveSpeed = 5f;           // Speed of the character
     public float gravity = -9.81f;         // Gravity force
@@ -26,7 +27,11 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         if (photonView.IsMine)
+        {
             mark.SetActive(true);
+            cameraMain.SetActive(true);
+        }
+            
 
         controller = GetComponent<CharacterController>();
     }
@@ -39,7 +44,7 @@ public class PlayerController : MonoBehaviour
             HandleMovement();
             if (Input.GetKeyDown(KeyCode.F))
             {
-                photonView.RPC("HandleShoot", RpcTarget.All);
+                photonView.RPC(nameof(HandleShoot), RpcTarget.All);
             }
             //HandleShoot();
         }

@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Photon.Chat;
 using ExitGames.Client.Photon;
+using Photon.Chat;
 using Photon.Pun;
-using UnityEngine.UIElements;
 using TMPro;
-using UnityEditor.VersionControl;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class DemoPhotonChat : MonoBehaviour, IChatClientListener
 {
     private bool isConnected = false;
     private ChatClient chatClient;
-    public ScrollView scrollView;
+
+    public TMP_InputField privateUser;
     public GameObject messagePrefab;
     public TMP_InputField inputField;
     public string chatChannelName = "global";
@@ -33,7 +31,7 @@ public class DemoPhotonChat : MonoBehaviour, IChatClientListener
         }
     }
 
-    public  void JoinChat()
+    public void JoinChat()
     {
         if (!isConnected)
         {
@@ -55,7 +53,14 @@ public class DemoPhotonChat : MonoBehaviour, IChatClientListener
     {
         if (inputField.text != "")
         {
-            chatClient.PublishMessage(chatChannelName, inputField.text);
+            if (privateUser.text == "")
+            {
+                chatClient.PublishMessage(chatChannelName, inputField.text);
+            }
+            else
+            {
+                chatClient.SendPrivateMessage(privateUser.text, inputField.text);
+            }
             inputField.text = "";
         }
 
@@ -95,7 +100,12 @@ public class DemoPhotonChat : MonoBehaviour, IChatClientListener
 
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
-        //throw new System.NotImplementedException();
+        GameObject messagePrivate = GameObject.Instantiate(messagePrefab,
+            Vector3.zero,
+            Quaternion.identity,
+            content.transform);
+
+        messagePrivate.GetComponent<TextMeshProUGUI>().text = "(Private) " + sender + ": " + message.ToString();
     }
 
     public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
@@ -125,6 +135,4 @@ public class DemoPhotonChat : MonoBehaviour, IChatClientListener
     {
         //throw new System.NotImplementedException();
     }
-
-    
 }

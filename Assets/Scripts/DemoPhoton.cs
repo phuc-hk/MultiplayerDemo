@@ -12,10 +12,29 @@ public class DemoPhoton : MonoBehaviourPunCallbacks
     public TMP_InputField inputRoomName;
     public Button buttonCreateaRoom;
     public Button buttonJoinRoom;
+
+    public static DemoPhoton Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        PhotonNetwork.ConnectUsingSettings();
+        if (!PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.ConnectUsingSettings();
+        }
     }
 
     // Update is called once per frame
@@ -40,8 +59,9 @@ public class DemoPhoton : MonoBehaviourPunCallbacks
     public void CreateRoom()
     {
         RoomOptions roomOptions = new();
-        roomOptions.MaxPlayers = 2;
+        roomOptions.MaxPlayers = 4;
         PhotonNetwork.CreateRoom(inputRoomName.text, roomOptions);
+        //PhotonNetwork.JoinOrCreateRoom()
     }
 
     public void JoinRoom()
@@ -54,22 +74,40 @@ public class DemoPhoton : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRoom(roomName);
     }
 
+    public void CreateOrJoinRoom(string roomName)
+    {
+        RoomOptions roomOptions = new();
+        roomOptions.MaxPlayers = 4;
+        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
+    }
+
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
         PhotonNetwork.LoadLevel("PlayScene");
+        //PhotonNetwork.LoadLevel("MainScene");
     }
 
     public override void OnCreatedRoom()
     {
         base.OnCreatedRoom();
-        textState.text = "Create room succesfuly";
+        Debug.Log("Create room succesfuly");
+        //textState.text = "Create room succesfuly";
         //PhotonNetwork.LoadLevel("PlayScene");
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         base.OnCreateRoomFailed(returnCode, message);
-        textState.text = message;
+        Debug.Log("Create room fail " + message);
+        //textState.text = message;
     }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        base.OnJoinRoomFailed(returnCode, message);
+        Debug.Log("Join room fail " + message);
+        //textState.text = "Failed to join room: " + message;
+    }
+
 }

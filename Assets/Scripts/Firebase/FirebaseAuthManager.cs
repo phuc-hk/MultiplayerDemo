@@ -29,6 +29,7 @@ public class FirebaseAuthManager : MonoBehaviour
                 AuthResult newUser = task.Result;
                 Debug.Log("Signed in anonymously successfully. User ID: " + newUser.AdditionalUserInfo);
                 SceneManager.LoadScene("StartScene");
+                //SceneManager.LoadScene("2MainScene");
                 // Optionally, you can handle additional logic after successful sign-in here
             }
         });

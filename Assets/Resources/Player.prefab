@@ -176,7 +176,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mark: {fileID: 4293281701932836059}
-  cameraMain: {fileID: 2591931583609965282}
   moveSpeed: 5
   gravity: -9.81
   jumpHeight: 1.5

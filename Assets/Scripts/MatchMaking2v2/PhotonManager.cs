@@ -109,4 +109,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         PhotonNetwork.SetPlayerCustomProperties(customProperties);
     }
 
+    public void NavigateBackToRoom()
+    {
+        // Load the room scene (replace "RoomScene" with the actual name of your room scene)
+        //PhotonNetwork.LoadLevel("3RoomScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("3RoomScene");
+    }
 }

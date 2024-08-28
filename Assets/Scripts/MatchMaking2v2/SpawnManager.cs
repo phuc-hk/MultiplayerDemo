@@ -18,7 +18,7 @@ public class SpawnManager : MonoBehaviour
         GameObject player = PhotonNetwork.Instantiate("Player", spawnPosition, Quaternion.identity);
 
         // Set the Cinemachine camera to follow and look at the player
-        if (virtualCamera.gameObject != null)
+        if (virtualCamera != null)
             StartCoroutine(AssignCamera(player));
     }
 

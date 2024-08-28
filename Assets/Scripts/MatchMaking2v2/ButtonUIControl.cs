@@ -27,4 +27,9 @@ public class ButtonUIControl : MonoBehaviour
         string roomName = GetComponentInChildren<TextMeshProUGUI>().text;
         PhotonManager.Instance.JoinRoomByName(roomName);
     }
+
+    public void BackToRoom()
+    {
+        //PhotonManager.Instance.NavigateBackToRoom();
+    }
 }

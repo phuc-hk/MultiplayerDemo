@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace InsaneSystems.HealthbarsKit.UI
@@ -14,7 +15,10 @@ namespace InsaneSystems.HealthbarsKit.UI
 		float maxHealthValue;
 		float targetHeight = 2f;
 
-		void Awake()
+        // Reference to the PhotonView to check ownership
+        private PhotonView photonView;
+
+        void Awake()
 		{
 			rectTransform = GetComponent<RectTransform>();
 			rectTransform.anchorMin = new Vector2(0, 0);
@@ -43,7 +47,19 @@ namespace InsaneSystems.HealthbarsKit.UI
 		{
 			target = newTarget;
 			maxHealthValue = targetMaxHealth;
-		}
+
+            // Get the PhotonView from the target or parent object
+            photonView = target ? target.GetComponent<PhotonView>() : GetComponentInParent<PhotonView>();
+            // Set the health bar color based on ownership
+            if (photonView != null && photonView.IsMine)
+            {
+                fillImage.color = Color.green; // Local player's character
+            }
+            else
+            {
+                fillImage.color = Color.red; // Other players' characters
+            }
+        }
 
 		public void SetTargetHeight(float newHeight) => targetHeight = newHeight;
 

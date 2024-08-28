@@ -1,6 +1,8 @@
 ﻿using InsaneSystems.HealthbarsKit.UI;
 using Photon.Pun;
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 namespace InsaneSystems.HealthbarsKit
 {
@@ -21,11 +23,17 @@ namespace InsaneSystems.HealthbarsKit
 		float health;
 
         private PhotonView photonView;
+		public GameObject deathVFX;
+		//public GameObject winUIPanel; // Reference to the Win UI Panel
+		//public GameObject loseUIPanel; // Reference to the Lose UI Panel
+		private UIController uiController;
 
         void Awake() => health = maxHealth;
 		void Start()
 		{
             photonView = GetComponent<PhotonView>();
+			// Find the UIController in the scene (or assign it manually)
+            uiController = FindObjectOfType<UIController>();
             AddHealthbarToThisObject();
         }
 
@@ -74,9 +82,31 @@ namespace InsaneSystems.HealthbarsKit
                 Die();
         }
 
-        public void Die() => Destroy(gameObject);
+        public void Die()
+		{
+            // Sync death and check who caused the death
+            photonView.RPC(nameof(HandleDeath), RpcTarget.All, photonView.Owner.ActorNumber);
+            Destroy(gameObject);
+        }
 
-		public GameObject GetGameObject() => gameObject;
+        [PunRPC]
+        void HandleDeath(int actorNumberOfDeadPlayer)
+        {
+            if (PhotonNetwork.LocalPlayer.ActorNumber == actorNumberOfDeadPlayer)
+            {
+				// This player died, show the lose UI
+				//loseUIPanel.SetActive(true);
+				uiController.ShowLoseUI();
+            }
+            else
+            {
+				// The local player didn't die, they won
+				//winUIPanel.SetActive(true);
+				uiController.ShowWinUI();
+            }
+        }
+
+        public GameObject GetGameObject() => gameObject;
 		public float GetHealth() => health;
 		public float GetMaxHealth() => maxHealth;
 	}

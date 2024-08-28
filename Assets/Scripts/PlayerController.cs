@@ -19,6 +19,9 @@ public class PlayerController : MonoBehaviour
     public Transform bulletSpawnPos;
     public float bulletSpeed;
 
+    private Camera mainCamera;
+
+
     private void Awake()
     {
         photonView = GetComponent<PhotonView>();
@@ -29,6 +32,7 @@ public class PlayerController : MonoBehaviour
         if (photonView.IsMine)
         {
             mark.SetActive(true);
+            mainCamera = Camera.main;
             //cameraMain.SetActive(true);
         }
             
@@ -42,9 +46,13 @@ public class PlayerController : MonoBehaviour
         if (photonView.IsMine)
         {
             HandleMovement();
-            if (Input.GetKeyDown(KeyCode.F))
+            RotateTowardsMouse();
+            //if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetMouseButtonDown(1))
             {
-                photonView.RPC(nameof(HandleShoot), RpcTarget.All);
+                //photonView.RPC(nameof(HandleShoot), RpcTarget.All);
+                //HandleShootTest();
+                photonView.RPC(nameof(HandleShootTest), RpcTarget.All);
             }
             //HandleShoot();
         }
@@ -56,6 +64,15 @@ public class PlayerController : MonoBehaviour
     {
         GameObject bulletObject = GameObject.Instantiate(bullet, bulletSpawnPos.position, Quaternion.identity);
         bulletObject.GetComponent<Rigidbody>().velocity = Vector3.forward * bulletSpeed;
+
+    }
+
+    [PunRPC]
+    private void HandleShootTest()
+    {
+        //GameObject bulletObject = GameObject.Instantiate(bullet, bulletSpawnPos.position, Quaternion.identity);
+        //bulletObject.GetComponent<Rigidbody>().velocity = bulletSpawnPos.forward * bulletSpeed;
+        GetComponent<ECprojectileActor>().Fire();
 
     }
 
@@ -88,5 +105,22 @@ public class PlayerController : MonoBehaviour
         // Apply gravity
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+    }
+
+    private void RotateTowardsMouse()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo))
+        {
+            Vector3 targetPosition = hitInfo.point;
+            Vector3 direction = targetPosition - transform.position;
+            direction.y = 0f; // Keep the rotation in the horizontal plane
+            if (direction.sqrMagnitude > 0.01f)
+            {
+                Quaternion rotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 10f); // Smooth rotation
+            }
+        }
     }
 }

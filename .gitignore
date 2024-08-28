@@ -73,3 +73,5 @@ crashlytics-build.properties
 Assets/Photon/PhotonVoice/PhotonVoiceLibs/
 Assets/Firebase/
 Assets/Plugins/
+Assets/Unity.VisualScripting.Generated/
+Assets/Ilumisoft/

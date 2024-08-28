@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Recoder
-  - Recorder
-  - StateVoice
+  - Shootable
+  - CinemachineTarget
+  - FX
   layers:
   - Default
   - TransparentFX
@@ -16,11 +16,11 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Lighting
+  - Ground
+  - Postprocessing
+  - Projectile
+  - Weapon
   - 
   - 
   - 
@@ -41,6 +41,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Fire
+    uniqueID: 3804908061
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

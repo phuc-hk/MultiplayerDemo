@@ -45,12 +45,6 @@ public class RoomManager : MonoBehaviour
         photonView = GetComponent<PhotonView>();
     }
 
-    // Set the current user (from AuthenticationManager)
-    //public void SetCurrentUser(FirebaseUser user)
-    //{
-    //    currentUser = user;
-    //}
-
     // Called when player clicks the Ready/Start button
     public void OnReadyStartButtonClicked()
     {
@@ -99,7 +93,6 @@ public class RoomManager : MonoBehaviour
             // Player is the room owner
             isRoomOwner = true;
             buttonText.text = "Start";
-            //readyStartButton.interactable = false;  // Start button disabled until all players are ready
         }
         else
         {
@@ -140,7 +133,6 @@ public class RoomManager : MonoBehaviour
                 Debug.Log("A new player has joined the room.");
                 DatabaseManager.Instance.UpdateRoomReadyStatus(PhotonNetwork.CurrentRoom.Name, false);
                 UpdateStartButtonState(); // Update the Start button when a new player joins
-                Debug.Log("A new player has joined the room last.");
             }
         };
 
@@ -161,7 +153,6 @@ public class RoomManager : MonoBehaviour
             bool newStatus = (bool)args.Snapshot.Value;
             if (newStatus == true)
             {
-                Debug.Log("Update Start button khi Room status thay doi sang True");
                 UpdateStartButtonState();
                 //Debug.Log("Room ready da thay doi roi ne " + newStatus);
             }           
@@ -183,24 +174,9 @@ public class RoomManager : MonoBehaviour
                 // Check if all players are ready (wait until all are checked)
                 CheckAllPlayersReady((allReady) =>
                 {
-                    //Debug.Log("More than one player in the room. All players ready: " + allReady);
-                    //Debug.Log("Set interactive");
-                    //readyStartButton.interactable = allReady;
-                    //Debug.Log("Set active");                    
-                    //readyStartButton.gameObject.SetActive(allReady);
-                    //Debug.Log("Set enable");
-                    //StartCoroutine(ResetButton());
-
                     try
                     {
                         readyStartButton.interactable = allReady;
-                        //Debug.Log("Set interactable to: " + allReady);
-
-                        //Debug.Log("Set active");
-                        //readyStartButton.gameObject.SetActive(allReady); // Ensure the button is active before setting it again              
-
-                        //Debug.Log("Started ResetButton coroutine");
-                        //StartCoroutine(ResetButton());
                        
                     }
                     catch (Exception ex)
@@ -210,15 +186,6 @@ public class RoomManager : MonoBehaviour
                 });
             }
         }
-    }
-
-    IEnumerator ResetButton()
-    {
-        readyStartButton.enabled = false;
-        Debug.Log("Tat nut ready ne");
-        yield return new WaitForSeconds(1f);
-        readyStartButton.enabled = true;
-        Debug.Log("Bat nut ready ne");
     }
 
     // Method to check if all players in the room are ready, using a callback

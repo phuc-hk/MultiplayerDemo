@@ -28,6 +28,11 @@ public class ButtonUIControl : MonoBehaviour
         PhotonManager.Instance.JoinRoomByName(roomName);
     }
 
+    public void LeaveRoom()
+    {
+        PhotonManager.Instance.LeaveRoom();
+    }
+
     public void BackToRoom()
     {
         //PhotonManager.Instance.NavigateBackToRoom();

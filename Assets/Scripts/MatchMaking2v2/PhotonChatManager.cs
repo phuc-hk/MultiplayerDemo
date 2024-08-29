@@ -20,7 +20,7 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
     // Start is called before the first frame update
     void Start()
     {
-
+        JoinChat();
     }
 
     // Update is called once per frame
